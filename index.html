@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>介護記録テンプレート</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>介護記録テンプレート</h1>
+
+    <form id="recordForm">
+      <div class="form-group">
+        <label for="date">日付</label>
+        <input type="date" id="date" name="date" required />
+      </div>
+
+      <div class="form-group">
+        <label for="name">対象者名</label>
+        <input type="text" id="name" name="name" placeholder="例: 山田 太郎" required />
+      </div>
+
+      <div class="form-group">
+        <label for="meal">食事</label>
+        <select id="meal" name="meal">
+          <option value="">選択してください</option>
+          <option value="完食">完食</option>
+          <option value="半分">半分</option>
+          <option value="少量">少量</option>
+          <option value="未摂取">未摂取</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="water">水分量(ml)</label>
+        <input type="number" id="water" name="water" min="0" placeholder="例: 500" />
+      </div>
+
+      <div class="form-group">
+        <label for="medicine">服薬</label>
+        <select id="medicine" name="medicine">
+          <option value="">選択してください</option>
+          <option value="済">済</option>
+          <option value="未">未</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="toilet">排泄</label>
+        <select id="toilet" name="toilet">
+          <option value="">選択してください</option>
+          <option value="あり">あり</option>
+          <option value="なし">なし</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="temperature">体温(℃)</label>
+        <input type="number" id="temperature" name="temperature" step="0.1" placeholder="例: 36.5" />
+      </div>
+
+      <div class="form-group">
+        <label for="memo">メモ</label>
+        <textarea id="memo" name="memo" rows="4" placeholder="体調や気づいたことを入力"></textarea>
+      </div>
+
+      <button type="submit">保存する</button>
+    </form>
+
+    <section aria-labelledby="recordsHeading" class="records-section">
+      <h2 id="recordsHeading">保存済み記録</h2>
+      <div id="recordsList"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
