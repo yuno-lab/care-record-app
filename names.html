@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>対象者名管理</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="care-record-favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <main class="container">
+    <h1>対象者名管理</h1>
+
+    <nav class="top-nav">
+      <a href="index.html">記録ページ</a>
+      <a href="names.html">対象者名管理</a>
+    </nav>
+
+    <form id="nameForm">
+      <div class="form-group">
+        <label for="personName">対象者名</label>
+        <input type="text" id="personName" name="personName" placeholder="例: 山田 太郎" required />
+      </div>
+
+      <button type="submit">名前を追加する</button>
+    </form>
+
+    <section aria-labelledby="namesHeading" class="records-section">
+      <h2 id="namesHeading">登録済み対象者名</h2>
+      <div id="namesList"></div>
+    </section>
+  </main>
+
+  <script src="names.js"></script>
+</body>
+</html>

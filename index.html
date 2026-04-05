@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>介護記録テンプレート</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="care-record-favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <main class="container">
     <h1>介護記録テンプレート</h1>
+
+    <nav class="top-nav">
+      <a href="index.html">記録ページ</a>
+      <a href="names.html">対象者名管理</a>
+    </nav>
 
     <form id="recordForm">
       <div class="form-group">
@@ -17,8 +23,13 @@
       </div>
 
       <div class="form-group">
-        <label for="name">対象者名</label>
-        <input type="text" id="name" name="name" placeholder="例: 山田 太郎" required />
+        <label for="personId">対象者名</label>
+        <select id="personId" name="personId" required>
+          <option value="">選択してください</option>
+        </select>
+        <p class="help-text">
+          候補がない場合は <a href="names.html">対象者名管理ページ</a> で追加してください。
+        </p>
       </div>
 
       <div class="form-group">
@@ -67,6 +78,15 @@
 
       <button type="submit">保存する</button>
     </form>
+
+    <section class="record-tools" aria-labelledby="toolsHeading">
+      <h2 id="toolsHeading">データ入出力</h2>
+      <div class="tool-buttons">
+        <button type="button" id="exportRecordsBtn">保存済み記録をエクスポート</button>
+        <label class="file-import-label" for="importRecordsFile">保存済み記録をインポート</label>
+        <input type="file" id="importRecordsFile" accept=".json,application/json" />
+      </div>
+    </section>
 
     <section aria-labelledby="recordsHeading" class="records-section">
       <h2 id="recordsHeading">保存済み記録</h2>
