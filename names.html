@@ -14,7 +14,37 @@
     <nav class="top-nav">
       <a href="index.html">記録ページ</a>
       <a href="names.html">対象者名管理</a>
+      <button type="button" id="toggleHelpBtn" class="nav-button">使い方</button>
     </nav>
+
+    <section id="helpSection" class="help-panel" hidden>
+      <h2>使い方</h2>
+      <div class="help-content">
+        <p>
+          このページでは、記録ページで使用する対象者名の候補を管理します。
+          ここで登録した対象者名は、記録ページのプルダウン候補として表示されます。
+        </p>
+        <p>
+          対象者名を追加するには、入力欄に名前を入力して「名前を追加する」ボタンを押してください。
+          すでに同じ名前が登録されている場合は、重複登録できないようになっています。
+        </p>
+        <p>
+          登録済み対象者名には削除ボタンがあります。
+          ただし、過去の記録に使われている対象者名を削除しても、
+          保存済み記録側にはその時点の対象者名が残るようにしています。
+        </p>
+        <p>
+          データ入出力では、対象者名一覧だけでなく保存済み記録も含めて JSON 形式でエクスポート / インポートできます。
+          インポート時には、対象者名一覧は既存データとマージされ、
+          記録データは対象者名IDと日付が一致した場合にインポート側の内容で上書きされます。
+        </p>
+        <p>
+          記録ページで対象者名候補が表示されない場合は、
+          このページと記録ページを同じブラウザ・同じURL配下で開いているか確認してください。
+          また、必要に応じてページを再読み込みすると反映されることがあります。
+        </p>
+      </div>
+    </section>
 
     <form id="nameForm">
       <div class="form-group">
@@ -25,12 +55,24 @@
       <button type="submit">名前を追加する</button>
     </form>
 
+    <section class="record-tools" aria-labelledby="nameToolsHeading">
+      <h2 id="nameToolsHeading">データ入出力</h2>
+      <div class="tool-buttons">
+        <button type="button" id="exportAllDataBtn">データをエクスポート</button>
+        <label class="file-import-label" for="importAllDataFile">データをインポート</label>
+        <input type="file" id="importAllDataFile" accept=".json,application/json" />
+      </div>
+      <p class="help-text">
+        エクスポート / インポート対象には、保存済み記録と対象者名一覧の両方が含まれます。
+      </p>
+    </section>
+
     <section aria-labelledby="namesHeading" class="records-section">
       <h2 id="namesHeading">登録済み対象者名</h2>
       <div id="namesList"></div>
     </section>
   </main>
 
-  <script src="names.js"></script>
+  <script src="names.js?v=20260412-3"></script>
 </body>
 </html>

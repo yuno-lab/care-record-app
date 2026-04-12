@@ -14,7 +14,44 @@
     <nav class="top-nav">
       <a href="index.html">記録ページ</a>
       <a href="names.html">対象者名管理</a>
+      <button type="button" id="toggleHelpBtn" class="nav-button">使い方</button>
     </nav>
+
+    <section id="helpSection" class="help-panel" hidden>
+      <h2>使い方</h2>
+      <div class="help-content">
+        <p>
+          このアプリは、介護記録をブラウザ上で保存・管理するためのテンプレートです。
+          記録ページでは、日付、対象者名、食事、水分量、服薬、排泄、体温、メモを入力して保存できます。
+        </p>
+        <p>
+          対象者名は自由入力ではなく、対象者名管理ページであらかじめ登録した名前をプルダウンから選択する方式です。
+          これにより、入力ミスや表記ゆれを防ぎやすくしています。
+        </p>
+        <p>
+          記録を新しく保存する際には、同じ対象者名と同じ日付の組み合わせの記録がすでに存在している場合、
+          重複登録を防ぐため保存できません。
+        </p>
+        <p>
+          保存済み記録には、編集ボタンと削除ボタンがあります。
+          編集ボタンを押すと、その記録の内容を画面上で修正できます。
+          編集中は保存ボタンとキャンセルボタンが表示され、保存時・キャンセル時には確認ダイアログが表示されます。
+        </p>
+        <p>
+          記録の編集時にも、対象者名と日付の組み合わせが他の保存済み記録と重複していないかを確認しています。
+          もし重複している場合は、保存できないようになっています。
+        </p>
+        <p>
+          データ入出力では、保存済み記録だけでなく対象者名一覧も含めて JSON 形式でエクスポートできます。
+          インポート時には、対象者名一覧は既存データとマージされ、
+          記録データは対象者名IDと日付が一致する場合にインポート側の内容で上書きされます。
+        </p>
+        <p>
+          このアプリのデータはブラウザ内に保存されるため、同じブラウザ・同じ端末であれば再読み込み後も記録が残ります。
+          一方で、ブラウザのデータ削除や端末変更時に消える可能性があるため、必要に応じて定期的にエクスポートしてバックアップを取ることをおすすめします。
+        </p>
+      </div>
+    </section>
 
     <form id="recordForm">
       <div class="form-group">
@@ -82,10 +119,13 @@
     <section class="record-tools" aria-labelledby="toolsHeading">
       <h2 id="toolsHeading">データ入出力</h2>
       <div class="tool-buttons">
-        <button type="button" id="exportRecordsBtn">保存済み記録をエクスポート</button>
-        <label class="file-import-label" for="importRecordsFile">保存済み記録をインポート</label>
+        <button type="button" id="exportRecordsBtn">データをエクスポート</button>
+        <label class="file-import-label" for="importRecordsFile">データをインポート</label>
         <input type="file" id="importRecordsFile" accept=".json,application/json" />
       </div>
+      <p class="help-text">
+        エクスポート / インポート対象には、保存済み記録と対象者名一覧の両方が含まれます。
+      </p>
     </section>
 
     <section aria-labelledby="recordsHeading" class="records-section">
@@ -94,6 +134,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20260412-3"></script>
 </body>
 </html>
