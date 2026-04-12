@@ -1,8 +1,11 @@
 const nameForm = document.getElementById('nameForm');
 const personNameInput = document.getElementById('personName');
 const namesList = document.getElementById('namesList');
+const exportAllDataBtn = document.getElementById('exportAllDataBtn');
+const importAllDataFile = document.getElementById('importAllDataFile');
 
 const NAMES_KEY = 'careNames';
+const RECORDS_KEY = 'careRecords';
 
 function safeParse(jsonText, fallbackValue) {
   try {
@@ -60,17 +63,51 @@ function normalizeNames(rawValue) {
     }
   });
 
-  const uniqueMap = new Map();
-
+  const uniqueById = new Map();
   normalized.forEach((item) => {
-    if (!uniqueMap.has(item.name)) {
-      uniqueMap.set(item.name, item);
+    if (!uniqueById.has(item.id)) {
+      uniqueById.set(item.id, item);
     }
   });
 
-  return Array.from(uniqueMap.values()).sort((a, b) =>
+  const uniqueByName = new Map();
+  Array.from(uniqueById.values()).forEach((item) => {
+    if (!uniqueByName.has(item.name)) {
+      uniqueByName.set(item.name, item);
+    }
+  });
+
+  return Array.from(uniqueByName.values()).sort((a, b) =>
     a.name.localeCompare(b.name, 'ja')
   );
+}
+
+function normalizeRecords(rawValue) {
+  if (!Array.isArray(rawValue)) {
+    return [];
+  }
+
+  return rawValue
+    .filter((record) => record && typeof record === 'object')
+    .map((record) => ({
+      date: typeof record.date === 'string' ? record.date : '',
+      personId: typeof record.personId === 'string' ? record.personId : '',
+      personName:
+        typeof record.personName === 'string'
+          ? record.personName
+          : typeof record.name === 'string'
+            ? record.name
+            : '',
+      meal: typeof record.meal === 'string' ? record.meal : '',
+      water: typeof record.water === 'string' || typeof record.water === 'number' ? String(record.water) : '',
+      medicine: typeof record.medicine === 'string' ? record.medicine : '',
+      toilet: typeof record.toilet === 'string' ? record.toilet : '',
+      temperature:
+        typeof record.temperature === 'string' || typeof record.temperature === 'number'
+          ? String(record.temperature)
+          : '',
+      memo: typeof record.memo === 'string' ? record.memo : ''
+    }));
 }
 
 function getNames() {
@@ -82,6 +119,17 @@ function getNames() {
 function saveNames(names) {
   const normalized = normalizeNames(names);
   localStorage.setItem(NAMES_KEY, JSON.stringify(normalized));
+}
+
+function getRecords() {
+  const raw = localStorage.getItem(RECORDS_KEY);
+  const parsed = raw ? safeParse(raw, []) : [];
+  return normalizeRecords(parsed);
+}
+
+function saveRecords(records) {
+  const normalized = normalizeRecords(records);
+  localStorage.setItem(RECORDS_KEY, JSON.stringify(normalized));
 }
 
 function renderNames() {
@@ -124,6 +172,93 @@ function deleteName(index) {
   renderNames();
 }
 
+function buildExportData() {
+  return {
+    exportedAt: new Date().toISOString(),
+    app: 'care-record-app',
+    version: 3,
+    names: getNames(),
+    records: getRecords()
+  };
+}
+
+function exportAllData() {
+  const exportData = buildExportData();
+
+  const blob = new Blob(
+    [JSON.stringify(exportData, null, 2)],
+    { type: 'application/json' }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const today = new Date().toISOString().split('T')[0];
+
+  a.href = url;
+  a.download = `care-record-app-data-${today}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function mergeNames(existingNames, importedNames) {
+  const existing = normalizeNames(existingNames);
+  const imported = normalizeNames(importedNames);
+
+  const byId = new Map();
+
+  existing.forEach((item) => {
+    byId.set(item.id, item);
+  });
+
+  imported.forEach((item) => {
+    byId.set(item.id, item);
+  });
+
+  return normalizeNames(Array.from(byId.values()));
+}
+
+function makeRecordKey(record) {
+  const personId = typeof record.personId === 'string' ? record.personId.trim() : '';
+  const date = typeof record.date === 'string' ? record.date.trim() : '';
+  return `${personId}__${date}`;
+}
+
+function importAllData(file) {
+  if (!file) {
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+
+      const importedNames = normalizeNames(imported.names || []);
+      const importedRecords = normalizeRecords(imported.records || []);
+
+      const mergedNames = mergeNames(getNames(), importedNames);
+      saveNames(mergedNames);
+
+      const existingRecords = getRecords();
+      const importedKeys = new Set(importedRecords.map((record) => makeRecordKey(record)));
+      const filteredExistingRecords = existingRecords.filter((record) => !importedKeys.has(makeRecordKey(record)));
+      const mergedRecords = [...importedRecords, ...filteredExistingRecords];
+      saveRecords(mergedRecords);
+
+      renderNames();
+      alert('データをインポートしました。対象者名一覧をマージし、personId と date が一致する記録はインポート内容で上書きしました。');
+    } catch (error) {
+      console.error(error);
+      alert('JSON の読み込みに失敗しました。');
+    }
+  };
+
+  reader.readAsText(file);
+}
+
 if (nameForm) {
   nameForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -156,7 +291,33 @@ if (nameForm) {
   });
 }
 
+if (exportAllDataBtn) {
+  exportAllDataBtn.addEventListener('click', exportAllData);
+}
+
+if (importAllDataFile) {
+  importAllDataFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    importAllData(file);
+    e.target.value = '';
+  });
+}
+
 window.addEventListener('pageshow', renderNames);
 window.addEventListener('focus', renderNames);
 
+function setupHelpToggle() {
+  const toggleHelpBtn = document.getElementById('toggleHelpBtn');
+  const helpSection = document.getElementById('helpSection');
+
+  if (!toggleHelpBtn || !helpSection) {
+    return;
+  }
+
+  toggleHelpBtn.addEventListener('click', () => {
+    helpSection.hidden = !helpSection.hidden;
+  });
+}
+
+setupHelpToggle();
 renderNames();

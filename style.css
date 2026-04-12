@@ -11,7 +11,7 @@ body {
   padding: 24px;
 }
 
-h1, h2 {
+h1, h2, h3 {
   margin-top: 0;
 }
 
@@ -22,14 +22,25 @@ h1, h2 {
   flex-wrap: wrap;
 }
 
-.top-nav a {
+.top-nav a,
+.nav-button {
   display: inline-block;
+  width: auto;
+  min-width: 0;
   background: #ffffff;
   padding: 10px 14px;
   border-radius: 10px;
   text-decoration: none;
   color: #222;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: none;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.nav-button {
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 form, .record-card, .record-tools {
@@ -65,10 +76,6 @@ button {
   margin: 6px 0;
 }
 
-.delete-btn {
-  margin-top: 12px;
-}
-
 .help-text {
   font-size: 14px;
   margin-top: 8px;
@@ -94,7 +101,8 @@ button {
   text-align: center;
 }
 
-#importRecordsFile {
+#importRecordsFile,
+#importAllDataFile {
   display: none;
 }
 
@@ -121,6 +129,53 @@ button {
   min-width: 100px;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.action-buttons button {
+  width: auto;
+  min-width: 120px;
+}
+
+.edit-form {
+  margin-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+}
+
+.edit-form .form-group:last-of-type {
+  margin-bottom: 12px;
+}
+
+.subtle-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.help-panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.help-content p {
+  margin: 0 0 12px 0;
+  line-height: 1.8;
+}
+
+.help-content p:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 600px) {
   .tool-buttons {
     flex-direction: column;
@@ -128,7 +183,8 @@ button {
 
   .tool-buttons button,
   .file-import-label,
-  .small-btn {
+  .small-btn,
+  .action-buttons button {
     width: 100%;
   }
 
