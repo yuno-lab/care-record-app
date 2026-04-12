@@ -235,9 +235,32 @@ function importRecords(file) {
         return;
       }
 
-      saveRecords(imported.records);
+      const existingRecords = getRecords();
+      const importedRecords = imported.records;
+
+      // インポート側の personId 一覧を収集
+      const importedPersonIds = new Set(
+        importedRecords
+          .map((record) => record.personId)
+          .filter((personId) => typeof personId === 'string' && personId.trim() !== '')
+      );
+
+      // 既存記録のうち、インポート対象の personId と重複しないものだけ残す
+      const filteredExistingRecords = existingRecords.filter((record) => {
+        const personId = record.personId;
+        if (typeof personId !== 'string' || personId.trim() === '') {
+          return true;
+        }
+        return !importedPersonIds.has(personId);
+      });
+
+      // 残した既存記録 + インポート記録 を結合
+      const mergedRecords = [...importedRecords, ...filteredExistingRecords];
+
+      saveRecords(mergedRecords);
       renderRecords();
-      alert('保存済み記録をインポートしました。');
+
+      alert('保存済み記録をインポートしました。重複する対象者IDの記録はインポート内容で上書きしました。');
     } catch (error) {
       console.error(error);
       alert('JSON の読み込みに失敗しました。');
