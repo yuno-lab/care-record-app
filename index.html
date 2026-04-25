@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>介護記録テンプレート</title>
+  <title>介護記録テンプレート｜食事・服薬・体温を記録できる無料Webアプリ</title>
+  <meta name="description" content="介護記録テンプレートは、食事・水分量・服薬・排泄・体温・メモをブラウザ上で記録できる無料のWebアプリです。対象者名管理、編集、JSON・CSVエクスポート、印刷に対応しています。">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="介護記録テンプレート">
+  <meta property="og:description" content="食事・水分量・服薬・排泄・体温・メモを記録できる無料の介護記録Webアプリです。">
+  <meta property="og:type" content="website">
+  <!-- Search Console のHTMLタグ認証を使う場合は、発行されたmetaタグをこの下に貼り付けてください -->
+  <!-- <meta name="google-site-verification" content="ここにSearch Consoleの認証コード"> -->
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="care-record-favicon.svg" type="image/svg+xml">
 </head>
@@ -11,47 +18,27 @@
   <main class="container">
     <h1>介護記録テンプレート</h1>
 
-    <nav class="top-nav">
+    <section class="site-intro" aria-labelledby="introHeading">
+      <h2 id="introHeading">無料で使えるブラウザ保存型の介護記録テンプレート</h2>
+      <p>
+        介護記録テンプレートは、日々の食事・水分量・服薬・排泄・体温・メモを記録できる無料のWebアプリです。
+        対象者名を登録しておくことで、記録時にプルダウンから選択できます。
+      </p>
+      <p>
+        保存済み記録は編集・削除でき、JSON形式でのバックアップ、CSV形式での出力、印刷にも対応しています。
+        家族介護や日々の見守り記録の補助として利用できます。
+      </p>
+      <p class="notice-text">
+        入力内容はサーバーに送信されず、利用中のブラウザ内に保存されます。
+        ブラウザデータの削除や端末変更により記録が消える可能性があるため、必要に応じてエクスポート機能でバックアップしてください。
+      </p>
+    </section>
+
+    <nav class="top-nav" aria-label="ページ切り替え">
       <a href="index.html">記録ページ</a>
       <a href="names.html">対象者名管理</a>
-      <button type="button" id="toggleHelpBtn" class="nav-button">使い方</button>
+      <a href="help.html">使い方</a>
     </nav>
-
-    <section id="helpSection" class="help-panel" hidden>
-      <h2>使い方</h2>
-      <div class="help-content">
-        <p>
-          このアプリは、介護記録をブラウザ上で保存・管理するためのテンプレートです。
-          記録ページでは、日付、対象者名、食事、水分量、服薬、排泄、体温、メモを入力して保存できます。
-        </p>
-        <p>
-          対象者名は自由入力ではなく、対象者名管理ページであらかじめ登録した名前をプルダウンから選択する方式です。
-          これにより、入力ミスや表記ゆれを防ぎやすくしています。
-        </p>
-        <p>
-          記録を新しく保存する際には、同じ対象者名と同じ日付の組み合わせの記録がすでに存在している場合、
-          重複登録を防ぐため保存できません。
-        </p>
-        <p>
-          保存済み記録には、編集ボタンと削除ボタンがあります。
-          編集ボタンを押すと、その記録の内容を画面上で修正できます。
-          編集中は保存ボタンとキャンセルボタンが表示され、保存時・キャンセル時には確認ダイアログが表示されます。
-        </p>
-        <p>
-          記録の編集時にも、対象者名と日付の組み合わせが他の保存済み記録と重複していないかを確認しています。
-          もし重複している場合は、保存できないようになっています。
-        </p>
-        <p>
-          データ入出力では、保存済み記録だけでなく対象者名一覧も含めて JSON 形式でエクスポートできます。
-          インポート時には、対象者名一覧は既存データとマージされ、
-          記録データは対象者名IDと日付が一致する場合にインポート側の内容で上書きされます。
-        </p>
-        <p>
-          このアプリのデータはブラウザ内に保存されるため、同じブラウザ・同じ端末であれば再読み込み後も記録が残ります。
-          一方で、ブラウザのデータ削除や端末変更時に消える可能性があるため、必要に応じて定期的にエクスポートしてバックアップを取ることをおすすめします。
-        </p>
-      </div>
-    </section>
 
     <form id="recordForm">
       <div class="form-group">
@@ -116,24 +103,62 @@
       <button type="submit">保存する</button>
     </form>
 
-    <section class="record-tools" aria-labelledby="toolsHeading">
+    <section class="record-tools" aria-labelledby="filterHeading">
+      <h2 id="filterHeading">絞り込み・並び替え</h2>
+      <div class="filter-grid">
+        <div class="form-group">
+          <label for="filterPersonId">対象者名</label>
+          <select id="filterPersonId">
+            <option value="">すべて</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="filterDateFrom">開始日</label>
+          <input type="date" id="filterDateFrom">
+        </div>
+
+        <div class="form-group">
+          <label for="filterDateTo">終了日</label>
+          <input type="date" id="filterDateTo">
+        </div>
+
+        <div class="form-group">
+          <label for="sortOrder">並び順</label>
+          <select id="sortOrder">
+            <option value="desc">新しい順</option>
+            <option value="asc">古い順</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tool-buttons">
+        <button type="button" id="applyFilterBtn">絞り込みを反映</button>
+        <button type="button" id="clearFilterBtn">絞り込みを解除</button>
+      </div>
+    </section>
+
+    <section class="record-tools no-print" aria-labelledby="toolsHeading">
       <h2 id="toolsHeading">データ入出力</h2>
       <div class="tool-buttons">
-        <button type="button" id="exportRecordsBtn">データをエクスポート</button>
-        <label class="file-import-label" for="importRecordsFile">データをインポート</label>
+        <button type="button" id="exportRecordsBtn">JSONでバックアップ</button>
+        <button type="button" id="exportCsvBtn">表示中の記録をCSVエクスポート</button>
+        <button type="button" id="printRecordsBtn">表示中の記録を印刷</button>
+        <label class="file-import-label" for="importRecordsFile">JSONをインポート</label>
         <input type="file" id="importRecordsFile" accept=".json,application/json" />
       </div>
       <p class="help-text">
-        エクスポート / インポート対象には、保存済み記録と対象者名一覧の両方が含まれます。
+        JSONには保存済み記録と対象者名一覧の両方が含まれます。CSVはExcelなどで確認しやすい形式です。
       </p>
     </section>
 
-    <section aria-labelledby="recordsHeading" class="records-section">
+    <section aria-labelledby="recordsHeading" class="records-section print-area">
       <h2 id="recordsHeading">保存済み記録</h2>
+      <p id="recordCountMessage" class="help-text"></p>
       <div id="recordsList"></div>
     </section>
   </main>
 
-  <script src="script.js?v=20260412-3"></script>
+  <script src="script.js?v=20260425-1"></script>
 </body>
 </html>

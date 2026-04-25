@@ -1,18 +1,22 @@
 body {
-  font-family: sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   margin: 0;
   background: #f5f7fa;
   color: #222;
 }
 
 .container {
-  max-width: 720px;
+  max-width: 880px;
   margin: 0 auto;
   padding: 24px;
 }
 
 h1, h2, h3 {
   margin-top: 0;
+}
+
+p {
+  line-height: 1.8;
 }
 
 .top-nav {
@@ -22,8 +26,7 @@ h1, h2, h3 {
   flex-wrap: wrap;
 }
 
-.top-nav a,
-.nav-button {
+.top-nav a {
   display: inline-block;
   width: auto;
   min-width: 0;
@@ -38,17 +41,23 @@ h1, h2, h3 {
   line-height: 1.2;
 }
 
-.nav-button {
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-form, .record-card, .record-tools {
+.site-intro,
+form,
+.record-card,
+.record-tools,
+.help-panel {
   background: #fff;
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
+}
+
+.notice-text {
+  background: #f8fafc;
+  border-left: 4px solid #2563eb;
+  padding: 10px 12px;
+  border-radius: 8px;
 }
 
 .form-group {
@@ -82,6 +91,15 @@ button {
   color: #555;
 }
 
+.help-content p {
+  margin: 0 0 12px 0;
+  line-height: 1.8;
+}
+
+.help-content p:last-child {
+  margin-bottom: 0;
+}
+
 .tool-buttons {
   display: flex;
   gap: 12px;
@@ -104,6 +122,12 @@ button {
 #importRecordsFile,
 #importAllDataFile {
   display: none;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 12px;
 }
 
 .name-item {
@@ -151,32 +175,19 @@ button {
   margin-bottom: 12px;
 }
 
-.subtle-box {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 12px;
-  margin-top: 10px;
+.readable-page {
+  max-width: 860px;
 }
 
-.help-panel {
-  background: #fff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
-}
+@media (max-width: 760px) {
+  .container {
+    padding: 16px;
+  }
 
-.help-content p {
-  margin: 0 0 12px 0;
-  line-height: 1.8;
-}
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
 
-.help-content p:last-child {
-  margin-bottom: 0;
-}
-
-@media (max-width: 600px) {
   .tool-buttons {
     flex-direction: column;
   }
@@ -191,5 +202,44 @@ button {
   .name-item {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .top-nav a {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .top-nav,
+  .site-intro,
+  form,
+  .record-tools,
+  .help-panel,
+  .no-print,
+  .action-buttons,
+  .help-text {
+    display: none !important;
+  }
+
+  .record-card {
+    box-shadow: none;
+    border: 1px solid #999;
+    page-break-inside: avoid;
+    margin-bottom: 12px;
+  }
+
+  h1, h2 {
+    color: #000;
   }
 }
