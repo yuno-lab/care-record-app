@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yuno-lab.github.io/care-record-app/sitemap.xml
